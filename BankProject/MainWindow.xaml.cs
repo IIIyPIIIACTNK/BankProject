@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace BankProject
 {
     /// <summary>
@@ -27,9 +28,25 @@ namespace BankProject
             DataContext= vm;
         }
 
-        private void aaa(object sender, RoutedEventArgs e)
+        private void ShowTransferPanel(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show($"{vm.SelectedAccount.Id}");
+            if (TransferPanel.DataContext != null)
+            TransferPanel.Visibility = Visibility.Visible;
+        }
+
+        private void CloseTransferMenu(object sender, RoutedEventArgs e)
+        {
+            TransferPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void CloseAddMenu(object sender, RoutedEventArgs e)
+        {
+            AddMoneyPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowAddPanel(object sender, RoutedEventArgs e)
+        {
+            AddMoneyPanel.Visibility = Visibility.Visible;
         }
     }
 }

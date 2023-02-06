@@ -5,40 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using BankProject.BankAccounts;
 
 namespace BankProject
 {
-    public class BankAccountsRepository : IMoneyOperations
+    public class BankAccountsRepository
     {
         ObservableCollection<BankAccount> bankAccounts =  new ObservableCollection<BankAccount>();
         private static HashSet<int> bankAccountIds = new HashSet<int>();
 
         public BankAccount SelectedBankAccount { get; set; }
         public ObservableCollection<BankAccount> Accounts { get { return bankAccounts; } set { bankAccounts = value; } }
-        public BankAccountsRepository() { }
-
-        public void ReplenishAccount(int ammount)
+        public BankAccountsRepository() 
         {
-            SelectedBankAccount.MoneyAmmount += ammount;
-        }
-
-        public void WithdrawFromAccount(int ammount)
-        {
-            SelectedBankAccount.MoneyAmmount -= ammount;
-        }
-
-        public void TransferBetweenAccounts(int ammount, BankAccount target)
-        {
-            SelectedBankAccount.MoneyAmmount -= ammount;
-            target.MoneyAmmount += ammount;
+            bankAccounts.Add(new NonDepositBankAccount(NotExistingBankAccountId()));
+            bankAccounts.Add(new DepositBankAccount(NotExistingBankAccountId()));
         }
 
         public void AddBankAccount()
         {
-            int tempId;
-            tempId = NotExistingBankAccountId();
-            bankAccountIds.Add(tempId);
-            bankAccounts.Add(new BankAccount(tempId));
+            bankAccounts.Add(new DepositBankAccount(NotExistingBankAccountId()));
         }
 
         public void AddBankAccount(BankAccount bankAccount)
@@ -50,12 +36,12 @@ namespace BankProject
         public void DeleteBankAccount(BankAccount b)
         {
             //string d = string.Empty;
-            //foreach(var a in bankAccountIds)
+            //foreach (var a in bankAccountIds)
             //{
-            //    d += $"{a} " ; 
+            //    d += $"{a} ";
             //}
             //MessageBox.Show(d);
-            //bankAccountIds.ExceptWith();
+            bankAccountIds.Remove(b.Id);
             bankAccounts.Remove(b);
         }
 
@@ -70,6 +56,7 @@ namespace BankProject
                 i = p;
                 break;
             }
+            bankAccountIds.Add(i);
             return i;
         }
     }

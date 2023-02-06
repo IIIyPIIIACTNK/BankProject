@@ -23,35 +23,60 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox DataContext="{Binding SelectedResident}" ItemsSource="{Binding ResidentAccounts}"
-                 SelectedItem="{Binding SelectedAccount}" Grid.Column="1">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Id}"/>
-                        <TextBlock Text="{Binding MoneyAmmount}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        
-        <!--<ListView Grid.Column="1"  DataContext="{Binding SelectedResident}" ItemsSource="{Binding ResidentAccounts}"
+        <ListView Grid.Column="1" ItemsSource="{Binding Path=SelectedResident.ResidentAccounts}"
                   SelectedItem="{Binding SelectedAccount}" SelectionMode="Single">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Id}" Width="30">Id</GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding MoneyAmmount}" Width="150">Сумма</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding AccountType}" Width="150">Тип аккаунта</GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>-->
+        </ListView>
 
         <Button Grid.Column="2"  Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="10,10,0,0" Command="{Binding OpenAccount}" CommandParameter="{Binding SelectedResident}" Click="aaa">
+                Margin="10,10,0,0" Command="{Binding OpenAccount}" CommandParameter="{Binding SelectedResident}">
             Открыть счет</Button>
         <Button Grid.Column="2"  Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Margin="10,50,0,0" Command="{Binding CloseAccount}" CommandParameter="{Binding SelectedAccount}">
             Закрыть счет</Button>
+        <Button Grid.Column="2" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Margin="10,90,0,0" Click="ShowTransferPanel">Начать перевод</Button>
 
+        <Button Grid.Column="2" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Margin="10,140,0,0" Click="ShowAddPanel" >Добавить средства</Button>
+
+        <StackPanel Name="TransferPanel" Grid.Column="2" Width="250" Height="120"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0"
+                    Visibility="Collapsed">
+            <TextBlock Text="Счет получатель"/>
+            <ComboBox Name="Target"
+                ItemsSource="{Binding Path=SelectedResident.ResidentAccounts}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock  Text="{Binding Id}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="Сумма"/>
+            <TextBox Text="{Binding MoneyAmmount, Mode=OneWayToSource}"></TextBox>
+            <Button Width="100" Height="20" Content="Перевести" 
+                    Command="{Binding TransferMoney}" CommandParameter="{Binding ElementName=Target, Path=SelectedItem}"/>
+            <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="20" Height="20" Click="CloseTransferMenu"
+                    >X</Button>
+        </StackPanel>
+
+        <StackPanel Name="AddMoneyPanel" Grid.Column="2" Width="250" Height="200"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0"
+                    Visibility="Collapsed">
+            <TextBlock Text="Сумма"/>
+            <TextBox Text="{Binding MoneyAmmount, Mode=OneWayToSource}"></TextBox>
+            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Height="20" Width="100"
+                    Content="Перевести"
+                    Command="{Binding AddMoney}"/>
+            <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="20" Height="20" Click="CloseAddMenu"
+                    >X</Button>
+        </StackPanel>
     </Grid>
 
 </Window>
