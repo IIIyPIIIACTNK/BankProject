@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankProject.BankAccounts;
 
 namespace BankProject
 {
     /// <summary>
-    /// Ковариантный интерфейс для пополнения счета клиента
+    /// Контрвариантный интерфейс для перевода между клиентами
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IAccountType <out T>
+    internal interface ITargetContr<in T>
     {
-        T GetValue { get; }
-
+        void TransferToClient(T target, float ammount);
     }
 }

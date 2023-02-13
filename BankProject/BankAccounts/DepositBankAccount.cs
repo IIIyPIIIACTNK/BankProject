@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankProject.BankAccounts
 {
-    public class DepositBankAccount : BankAccount, IAccountType<DepositBankAccount>
+    public class DepositBankAccount : BankAccount, ITargetContr<BankAccount>, IAccountType<DepositBankAccount>
     {
+        public DepositBankAccount GetValue => this;
+
         public DepositBankAccount(int id) : base(id) 
         {
             base.id = id;
@@ -15,7 +17,6 @@ namespace BankProject.BankAccounts
             accountType = "Депозитный";
         }
 
-        public DepositBankAccount GetValue => this;
 
         public override void ReplenishAccount(float ammount)
         {
@@ -27,15 +28,16 @@ namespace BankProject.BankAccounts
             MoneyAmmount -= ammount * 1.05f;
         }
 
-        public override void TransferBetweenAccounts(float ammount, BankAccount target)
+        public void TransferBetweenAccounts(float ammount, BankAccount target)
         {
             MoneyAmmount -= ammount * 1.05f;
             target.MoneyAmmount += ammount;
         }
 
-        //public static implicit operator DepositBankAccount(NonDepositBankAccount db)
-        //{
-        //    return new DepositBankAccount(db.Id);
-        //}
+        public void TransferToClient(BankAccount target, float ammount)
+        {
+            MoneyAmmount -= ammount * 1.08f;
+            target.MoneyAmmount += ammount;
+        }
     }
 }

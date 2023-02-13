@@ -9,13 +9,15 @@ using BankProject.BankAccounts;
 
 namespace BankProject
 {
-    public class BankAccountsRepository
+    public class BankAccountsRepository : IAccountType<BankAccount>, ITargetContr<BankAccount>
     {
         ObservableCollection<BankAccount> bankAccounts =  new ObservableCollection<BankAccount>();
         private static HashSet<int> bankAccountIds = new HashSet<int>();
 
         public BankAccount SelectedBankAccount { get; set; }
         public ObservableCollection<BankAccount> Accounts { get { return bankAccounts; } set { bankAccounts = value; } }
+
+        public BankAccount GetValue => SelectedBankAccount;
         public BankAccountsRepository() 
         {
             bankAccounts.Add(new NonDepositBankAccount(NotExistingBankAccountId()));
@@ -35,12 +37,6 @@ namespace BankProject
 
         public void DeleteBankAccount(BankAccount b)
         {
-            //string d = string.Empty;
-            //foreach (var a in bankAccountIds)
-            //{
-            //    d += $"{a} ";
-            //}
-            //MessageBox.Show(d);
             bankAccountIds.Remove(b.Id);
             bankAccounts.Remove(b);
         }
@@ -58,6 +54,13 @@ namespace BankProject
             }
             bankAccountIds.Add(i);
             return i;
+        }
+
+        public void TransferToClient(BankAccount target, float ammount)
+        {
+
+            SelectedBankAccount.MoneyAmmount -= ammount; 
+            target.MoneyAmmount += ammount;
         }
     }
 }

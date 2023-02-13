@@ -8,8 +8,10 @@ using System.Windows.Automation;
 
 namespace BankProject.BankAccounts
 {
-    public class NonDepositBankAccount : BankAccount, IAccountType<NonDepositBankAccount>
+    public class NonDepositBankAccount : BankAccount, ITargetContr<BankAccount>,IAccountType<NonDepositBankAccount>
     {
+        public NonDepositBankAccount GetValue => this;
+
         public NonDepositBankAccount(int id) : base(id)
         {
             base.id = id;
@@ -17,12 +19,9 @@ namespace BankProject.BankAccounts
             accountType = "Не депозитный";
         }
 
-
-        public NonDepositBankAccount GetValue { get { return this; } }
-
         public override void ReplenishAccount(float ammount)
         {
-            MoneyAmmount += ammount;
+            MoneyAmmount += ammount * 2;
         }
 
         public override void WithdrawFromAccount(float ammount)
@@ -30,19 +29,16 @@ namespace BankProject.BankAccounts
             MoneyAmmount -= ammount * 1.05f;
         }
 
-        public override void TransferBetweenAccounts(float ammount, BankAccount target)
+        public void TransferBetweenAccounts(float ammount, BankAccount target)
         {
             MoneyAmmount -= ammount * 1.05f;
-            MessageBox.Show($"{MoneyAmmount}");
             target.MoneyAmmount += ammount;
         }
 
-        public static implicit operator NonDepositBankAccount(DepositBankAccount db)
+        public void TransferToClient(BankAccount target, float ammount)
         {
-            var account = new NonDepositBankAccount(db.Id);
-            MessageBox.Show($"{db.MoneyAmmount}", "account");
-            MessageBox.Show($"{account.MoneyAmmount}", "operator");
-            return account;
+            MoneyAmmount -= ammount * 1.08f;
+            target.MoneyAmmount += ammount;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace BankProject
         RelayCommand openAccount;
         RelayCommand closeAccount;
         RelayCommand transferMoney;
+        RelayCommand transferMoneyToClient;
         RelayCommand addMoney;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -84,12 +85,21 @@ namespace BankProject
                 return transferMoney ??
                     (transferMoney = new RelayCommand(o =>
                     {
-                        IAccountType<BankAccount> getAccountType;
-                        var account = SelectedAccount is DepositBankAccount ?
-                        SelectedAccount as DepositBankAccount :
-                        SelectedAccount as NonDepositBankAccount;
-                        getAccountType = account;
-                        getAccountType.GetValue.TransferBetweenAccounts(MoneyAmmount, o as BankAccount);
+                        IAccountType<BankAccount> account = selectedResident.BankAccountsRepository;
+                        account.GetValue.ReplenishAccount(MoneyAmmount);
+                    }));
+            }
+        }
+
+        public RelayCommand TransferMoneyToClient
+        {
+            get
+            {
+                return transferMoneyToClient ?? (
+                    transferMoneyToClient = new RelayCommand(o =>
+                    {
+                        ITargetContr<BankAccount> getTargetContr = selectedResident.BankAccountsRepository.SelectedBankAccount;
+                        getTargetContr.TransferToClient(o as BankAccount, MoneyAmmount);
                     }));
             }
         }
@@ -100,7 +110,6 @@ namespace BankProject
                 return addMoney ?? (
                     addMoney = new RelayCommand(o =>
                     {
-                        SelectedAccount.ReplenishAccount(MoneyAmmount);
                     }));
             }
         }
@@ -110,7 +119,6 @@ namespace BankProject
             this.residents = new List<Resident>();
             foreach (var res in residents)
             {
-                res.BankAccountsRepository.AddBankAccount();
                 this.residents.Add(res);
             }
             residentsObs = new ObservableCollection<Resident>(this.residents);
@@ -122,5 +130,13 @@ namespace BankProject
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        //private BankAccount BankAccountType(BankAccount ba)
+        //{
+        //    if (ba is NonDepositBankAccount)
+        //        return ba as NonDepositBankAccount;
+        //    else 
+        //        return ba as DepositBankAccount;
+        //}
     }
 }

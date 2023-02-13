@@ -48,5 +48,15 @@ namespace BankProject
         {
             AddMoneyPanel.Visibility = Visibility.Visible;
         }
+
+        private void CloseTransferBetweenClints(object sender, RoutedEventArgs e)
+        {
+            TransferBetweenClients.Visibility = Visibility.Collapsed;
+        }
+
+        private void OpenTransferToClient(object sender, RoutedEventArgs e)
+        {
+            TransferBetweenClients.Visibility = Visibility.Visible;
+        }
     }
 }
