@@ -41,8 +41,6 @@
                 Margin="10,50,0,0" Command="{Binding CloseAccount}" CommandParameter="{Binding SelectedAccount}">
             Закрыть счет</Button>
         <Button Grid.Column="2" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="10,90,0,0" Click="ShowTransferPanel">Начать перевод</Button>
-        <Button Grid.Column="2" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Margin="10,130,0,0" Click="ShowAddPanel" >Добавить средства</Button>
         <Button Grid.Column="2" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Margin="10,170,0,0" Click="OpenTransferToClient" >Перевод другому клиенту</Button> 

@@ -18,7 +18,6 @@ namespace BankProject
 
         RelayCommand openAccount;
         RelayCommand closeAccount;
-        RelayCommand transferMoney;
         RelayCommand transferMoneyToClient;
         RelayCommand addMoney;
 
@@ -78,19 +77,6 @@ namespace BankProject
                     }));
             }
         }
-        public RelayCommand TransferMoney
-        {
-            get
-            {
-                return transferMoney ??
-                    (transferMoney = new RelayCommand(o =>
-                    {
-                        IAccountType<BankAccount> account = selectedResident.BankAccountsRepository;
-                        account.GetValue.ReplenishAccount(MoneyAmmount);
-                    }));
-            }
-        }
-
         public RelayCommand TransferMoneyToClient
         {
             get
@@ -110,6 +96,8 @@ namespace BankProject
                 return addMoney ?? (
                     addMoney = new RelayCommand(o =>
                     {
+                        IAccountType<BankAccount> account = selectedResident.BankAccountsRepository;
+                        account.GetValue.ReplenishAccount(MoneyAmmount);
                     }));
             }
         }
