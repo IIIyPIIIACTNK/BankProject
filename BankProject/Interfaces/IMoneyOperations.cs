@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BankProject.BankAccounts;
 
-namespace BankProject
+namespace BankProject.Interfaces
 {
     public interface IMoneyOperations
     {

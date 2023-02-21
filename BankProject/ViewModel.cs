@@ -4,8 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
+using BankProject.AccountOperationLog;
 using BankProject.BankAccounts;
+using BankProject.Interfaces;
 
 namespace BankProject
 {
@@ -15,6 +18,10 @@ namespace BankProject
         ObservableCollection<Resident> residentsObs;
         Resident selectedResident;
         BankAccount selectedAccount;
+        /// <summary>
+        /// Первоначальный лог для всех аккаунтов
+        /// </summary>
+        public static OperationLog Log = new OperationLog();
 
         RelayCommand openAccount;
         RelayCommand closeAccount;
@@ -23,6 +30,7 @@ namespace BankProject
 
         public event PropertyChangedEventHandler? PropertyChanged;
         #region BindingProperty
+        public OperationLog LogToView { get => Log; }
         public ObservableCollection<Resident> ResidetnsObs
         {
             get => residentsObs;
@@ -49,7 +57,6 @@ namespace BankProject
 
         #endregion
         //Команды
-
         public RelayCommand OpenAccount
         {
             get
@@ -113,18 +120,9 @@ namespace BankProject
         }
 
         #endregion
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        //private BankAccount BankAccountType(BankAccount ba)
-        //{
-        //    if (ba is NonDepositBankAccount)
-        //        return ba as NonDepositBankAccount;
-        //    else 
-        //        return ba as DepositBankAccount;
-        //}
     }
 }

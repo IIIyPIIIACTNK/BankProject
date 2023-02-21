@@ -5,40 +5,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using BankProject.AccountOperationLog;
 using BankProject.BankAccounts;
+using BankProject.Interfaces;
 
 namespace BankProject
 {
-    public class BankAccountsRepository : IAccountType<BankAccount>, ITargetContr<BankAccount>
+    public class BankAccountsRepository : 
+        IAccountType<BankAccount>, 
+        ITargetContr<BankAccount>,
+        IEventProvider
     {
-        ObservableCollection<BankAccount> bankAccounts =  new ObservableCollection<BankAccount>();
+        private ObservableCollection<BankAccount> bankAccounts =  new ObservableCollection<BankAccount>();
         private static HashSet<int> bankAccountIds = new HashSet<int>();
+        private Resident owner;
+
+        public event Action<Resident, BankAccount, float, OperationType> OperationEvent;
 
         public BankAccount SelectedBankAccount { get; set; }
         public ObservableCollection<BankAccount> Accounts { get { return bankAccounts; } set { bankAccounts = value; } }
 
         public BankAccount GetValue => SelectedBankAccount;
-        public BankAccountsRepository() 
+        public BankAccountsRepository(Resident owner) 
         {
-            bankAccounts.Add(new NonDepositBankAccount(NotExistingBankAccountId()));
-            bankAccounts.Add(new DepositBankAccount(NotExistingBankAccountId()));
+            this.owner = owner;
+            bankAccounts.Add(new NonDepositBankAccount(NotExistingBankAccountId(),owner));
+            bankAccounts.Add(new DepositBankAccount(NotExistingBankAccountId(),owner));
+            OperationEvent += ViewModel.Log.ReciveData;
         }
-
         public void AddBankAccount()
         {
-            bankAccounts.Add(new DepositBankAccount(NotExistingBankAccountId()));
-        }
-
-        public void AddBankAccount(BankAccount bankAccount)
-        {
-            bankAccountIds.Add(NotExistingBankAccountId());
+            DepositBankAccount bankAccount = new DepositBankAccount(NotExistingBankAccountId(), owner);
             bankAccounts.Add(bankAccount);
+            OperationEvent?.Invoke(owner, bankAccount,0,OperationType.OpenAccount);
         }
 
         public void DeleteBankAccount(BankAccount b)
         {
             bankAccountIds.Remove(b.Id);
             bankAccounts.Remove(b);
+            OperationEvent?.Invoke(owner, b, 0, OperationType.CloseAccount);
         }
 
         private int NotExistingBankAccountId()
@@ -58,9 +64,9 @@ namespace BankProject
 
         public void TransferToClient(BankAccount target, float ammount)
         {
-
             SelectedBankAccount.MoneyAmmount -= ammount; 
             target.MoneyAmmount += ammount;
+            OperationEvent?.Invoke(owner, SelectedBankAccount, ammount, OperationType.Transfer);
         }
     }
 }

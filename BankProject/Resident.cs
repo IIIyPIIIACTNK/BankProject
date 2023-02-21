@@ -25,10 +25,10 @@ namespace BankProject
         #region Конструктор
         public Resident(string name)
         {
-            bankAccountsRepository= new BankAccountsRepository();
             this.name = name;
+            bankAccountsRepository = new BankAccountsRepository(this);
         }
         #endregion
-        
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankProject.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,10 +23,13 @@ namespace BankProject
     public partial class MainWindow : Window
     {
         ViewModel vm = new ViewModel(new Resident("Pavel"), new Resident("Misha"));
+        EventLogWindow logWindow = new EventLogWindow();
         public MainWindow()
         {
             InitializeComponent();
             DataContext= vm;
+            logWindow.Show();
+            logWindow.DataContext = vm;
         }
 
         private void ShowTransferPanel(object sender, RoutedEventArgs e)

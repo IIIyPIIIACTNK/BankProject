@@ -1,0 +1,24 @@
+﻿<Window x:Class="BankProject.Windows.EventLogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankProject.Windows"
+        mc:Ignorable="d"
+        Title="EventLogWindow" Height="450" Width="800">
+    <Grid>
+        <!--<TextBlock Text="{Binding Path=SelectedAccount.Id}" FontSize="30"></TextBlock>-->
+        <ListView 
+            ItemsSource="{Binding Path=LogToView.OperationCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=eventCaller.Name}">Имя</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=AccountName}">Аккаунт</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=eventDate}">Время</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=operationMoneyAmmount}">Сумма</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=operationType}">Вид операции</GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
