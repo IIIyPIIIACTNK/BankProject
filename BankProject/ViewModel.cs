@@ -8,10 +8,16 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using BankProject.AccountOperationLog;
 using BankProject.BankAccounts;
+using BankProject.CustomExceptions;
 using BankProject.Interfaces;
 
 namespace BankProject
 {
+    // Ошибки : WrongDataType, NullAccountAmmout (не может быть меньше 1 или 2 аккаунтов у клиента) 
+    // добавить функционал добавление клиента в базу
+    // Стиль крутой(?)
+    // Добавиить для всех уведомлений соббщение в журнал  невыполненой операции
+    //
     public class ViewModel : INotifyPropertyChanged
     {
         List<Resident> residents;
@@ -27,6 +33,7 @@ namespace BankProject
         RelayCommand closeAccount;
         RelayCommand transferMoneyToClient;
         RelayCommand addMoney;
+        RelayCommand withdrawMoney;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         #region BindingProperty
@@ -53,7 +60,7 @@ namespace BankProject
         /// <summary>
         /// Привязка к TextBox "сумма перевода"
         /// </summary>
-        public int MoneyAmmount { get; set; }
+        public int ViewMoneyAmmount { get; set; }
 
         #endregion
         //Команды
@@ -91,8 +98,19 @@ namespace BankProject
                 return transferMoneyToClient ?? (
                     transferMoneyToClient = new RelayCommand(o =>
                     {
+                        try
+                        {
                         ITargetContr<BankAccount> getTargetContr = selectedResident.BankAccountsRepository.SelectedBankAccount;
-                        getTargetContr.TransferToClient(o as BankAccount, MoneyAmmount);
+                        getTargetContr.TransferToClient(o as BankAccount, ViewMoneyAmmount);
+                        }
+                        catch (NegativeAmmountExeption) 
+                        {
+                            MessageBox.Show("Недостаточно денег");
+                        }
+                        catch (NullReferenceException) 
+                        {
+                            MessageBox.Show("Не выбран клиент");
+                        }
                     }));
             }
         }
@@ -103,10 +121,39 @@ namespace BankProject
                 return addMoney ?? (
                     addMoney = new RelayCommand(o =>
                     {
+                        try {
                         IAccountType<BankAccount> account = selectedResident.BankAccountsRepository;
-                        account.GetValue.ReplenishAccount(MoneyAmmount);
+                        account.GetValue.ReplenishAccount(ViewMoneyAmmount);
+                        }
+                        catch (NegativeAmmountExeption) 
+                        {
+                            MessageBox.Show("Недосаточно денег");
+                        }
+                        catch (NullReferenceException) 
+                        {
+                            MessageBox.Show("Не выбран клиент");
+                        }
                     }));
             }
+        }
+        public RelayCommand WithdrawMoney
+        {
+            get { return withdrawMoney ?? (
+                    withdrawMoney = new RelayCommand(o =>
+                    {
+                        try { 
+                        SelectedAccount.WithdrawFromAccount(ViewMoneyAmmount);
+                        }
+                        catch (NegativeAmmountExeption) 
+                        {
+                            MessageBox.Show("Недостаточно средств");
+                        }
+                        catch (NullReferenceException)
+                        {
+                            MessageBox.Show("Не выбран аккаунт");
+                        }
+                    }));
+                }
         }
         #region Конструктор
         public ViewModel(params Resident[] residents)

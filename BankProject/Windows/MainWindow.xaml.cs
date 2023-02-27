@@ -62,5 +62,15 @@ namespace BankProject
         {
             TransferBetweenClients.Visibility = Visibility.Visible;
         }
+
+        private void ShowWithdrawPanel(object sender, RoutedEventArgs e)
+        {
+            WithdrawPanel.Visibility = Visibility.Visible;
+        }
+
+        private void CloseWithdrawPanel(object sender, RoutedEventArgs e)
+        {
+            WithdrawPanel.Visibility = Visibility.Collapsed;
+        }
     }
 }

@@ -12,11 +12,23 @@
             ItemsSource="{Binding Path=LogToView.OperationCollection}">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Ellipse Width="10" Height="10" Stroke="Black">
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{Binding ExceptionButtonColor}"></SolidColorBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=eventCaller.Name}">Имя</GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=AccountName}">Аккаунт</GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=eventDate}">Время</GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=operationMoneyAmmount}">Сумма</GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=operationType}">Вид операции</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=eventExceptionName}">Вид ошибки</GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
